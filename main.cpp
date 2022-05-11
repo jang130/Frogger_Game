@@ -1,24 +1,13 @@
-#include <SFML/Graphics.hpp>
+#include "engine.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(900, 900), "Frogger");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    // Declare an instance of Game Engine
+    Engine engine;
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    // Start the engine, works as a game/event loop
+    engine.start();
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
-
+    // Quit if the engine is stopped
     return 0;
 }

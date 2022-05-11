@@ -49,6 +49,7 @@ class Player
 
 	unsigned int getHeight() const;
 	unsigned int getWidth() const;
+	sf::Vector2f getPosition() const;
 
 	// Function that is called once every frame to update display
 	void update(float elapsedTime);

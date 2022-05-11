@@ -13,13 +13,13 @@ Player::Player()
 
 	// Associate a texture with the sprite
 	mTextureBack.loadFromFile("textures/frog_back.png");
-    mTextureRight.loadFromFile("textures/frog_right.png");
-    mTextureLeft.loadFromFile("textures/frog_left.png");
+	mTextureRight.loadFromFile("textures/frog_right.png");
+	mTextureLeft.loadFromFile("textures/frog_left.png");
 	mTextureFront.loadFromFile("textures/frog_front.png");
 	mSprite.setTexture(mTextureBack);
 
 	mSize.x = mSprite.getTexture()->getSize().x * mSprite.getScale().x,
-    mSize.y = mSprite.getTexture()->getSize().y * mSprite.getScale().y;
+	mSize.y = mSprite.getTexture()->getSize().y * mSprite.getScale().y;
 }
 
 void Player::setPosition(sf::Vector2f &pos)
@@ -82,33 +82,41 @@ unsigned int Player::getWidth() const
 	return mSize.x;
 }
 
+sf::Vector2f Player::getPosition() const
+{
+	return mPosition;
+}
+
 // Move Player based on the input this frame,
 // the time elapsed, and the speed
 void Player::update(float elapsedTime)
 {
+	sf::Vector2f tmpPositon = mPosition;
 	if(mRightPressed)
 	{
-        mSprite.setTexture(mTextureRight);
+		mSprite.setTexture(mTextureRight);
 		mPosition.x += mSpeed * elapsedTime;
 	}
 
 	if(mLeftPressed)
 	{
-        mSprite.setTexture(mTextureLeft);
+		mSprite.setTexture(mTextureLeft);
 		mPosition.x -= mSpeed * elapsedTime;
 	}
 
-    if(mUpPressed)
+	if(mUpPressed)
 	{
-        mSprite.setTexture(mTextureBack);
+		mSprite.setTexture(mTextureBack);
 		mPosition.y -= mSpeed * elapsedTime;
 	}
 
 	if(mDownPressed)
 	{
-        mSprite.setTexture(mTextureFront);
+		mSprite.setTexture(mTextureFront);
 		mPosition.y += mSpeed * elapsedTime;
 	}
+
+	// if(mSprite.getGlobalBounds().intersects())
 
 	// Now move the sprite to its new position
 	mSprite.setPosition(mPosition);

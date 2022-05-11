@@ -12,7 +12,7 @@ Engine::Engine()
 	mBackgroundSprite.setTexture(mBackgroundTexture);
 
 	// Set player start position
-	sf::Vector2f playerPosition{(resolution.x-mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
+	sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
 	mPlayer.setPosition(playerPosition);
 }
 
@@ -47,7 +47,7 @@ void Engine::start()
 		// Make a fraction from the delta time
 		float dtAsSeconds = dt.asSeconds();
 		update(dtAsSeconds);
-
+		checkWindowBoundCollision();
 		// check time elapsed for frame displaying
 		timeElapsedFromLastFrame_ms = clock_frames.getElapsedTime();
 		if(timeElapsedFromLastFrame_ms >= frameDelay_ms)
@@ -120,4 +120,30 @@ void Engine::draw()
 
 	// Show everything we have just drawn
 	mWindow.display();
+}
+
+void Engine::checkWindowBoundCollision()
+{
+	if(mPlayer.getPosition().x < 0)
+	{
+		sf::Vector2f newPos = {0, mPlayer.getPosition().y};
+		mPlayer.setPosition(newPos);
+	}
+	else if(mPlayer.getPosition().x + mPlayer.getWidth() > resolution.x)
+	{
+		sf::Vector2f newPos = {resolution.x - mPlayer.getWidth(), mPlayer.getPosition().y};
+		mPlayer.setPosition(newPos);
+	}
+
+	if(mPlayer.getPosition().y < 0)
+	{
+		sf::Vector2f newPos = {mPlayer.getPosition().x, 0};
+		mPlayer.setPosition(newPos);
+	}
+	else if(mPlayer.getPosition().y + mPlayer.getHeight() > resolution.y)
+	{
+		sf::Vector2f newPos = {mPlayer.getPosition().x, resolution.y - mPlayer.getHeight()};
+		mPlayer.setPosition(newPos);
+	}
+
 }

@@ -4,7 +4,7 @@
 Player::Player()
 {
 	// How fast does Player move?
-	mSpeed = 400;
+	mSpeed = 300;
 
 	mLeftPressed = false;
 	mRightPressed = false;

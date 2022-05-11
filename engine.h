@@ -16,8 +16,10 @@ class Engine
 	sf::RenderWindow mWindow;
 
 	// Declare a sprite and a Texture for the background
-	sf::Sprite mBackgroundSprite;
-	sf::Texture mBackgroundTexture;
+	sf::Sprite mGrassStartSprite;
+	sf::Texture mGrassStartTexture;
+	sf::Sprite mWaterSprite;
+	sf::Texture mWaterTexture;
 
 	// An instance of Player
 	Player mPlayer;
@@ -35,4 +37,5 @@ class Engine
 	void start();
 
 	void checkWindowBoundCollision();
+	void loadTexturesAndSprites();
 };

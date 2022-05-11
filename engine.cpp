@@ -1,15 +1,12 @@
 #include "engine.h"
+#include <iostream>
 
 Engine::Engine()
 {
 	// Create main game window
 	mWindow.create(sf::VideoMode(resolution.x, resolution.y), "Frogger Game");
 
-	// Load the background into the texture
-	mBackgroundTexture.loadFromFile("textures/background.jpeg");
-
-	// Associate the background sprite with the texture
-	mBackgroundSprite.setTexture(mBackgroundTexture);
+	loadTexturesAndSprites();
 
 	// Set player start position
 	sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
@@ -48,6 +45,7 @@ void Engine::start()
 		float dtAsSeconds = dt.asSeconds();
 		update(dtAsSeconds);
 		checkWindowBoundCollision();
+
 		// check time elapsed for frame displaying
 		timeElapsedFromLastFrame_ms = clock_frames.getElapsedTime();
 		if(timeElapsedFromLastFrame_ms >= frameDelay_ms)
@@ -115,7 +113,8 @@ void Engine::draw()
 	mWindow.clear(sf::Color::White);
 
 	// Draw the background
-	mWindow.draw(mBackgroundSprite);
+	mWindow.draw(mGrassStartSprite);
+	mWindow.draw(mWaterSprite);
 	mWindow.draw(mPlayer.getSprite());
 
 	// Show everything we have just drawn
@@ -146,4 +145,27 @@ void Engine::checkWindowBoundCollision()
 		mPlayer.setPosition(newPos);
 	}
 
+	if(mPlayer.getSprite().getGlobalBounds().intersects(mWaterSprite.getGlobalBounds()))
+	{
+		//detect collision into water
+		sf::Vector2f newPos = {0, 0};
+		mPlayer.setPosition(newPos);
+	}
+
+}
+
+void Engine::loadTexturesAndSprites()
+{
+// Load the background into the texture
+	mGrassStartTexture.loadFromFile("textures/grass_start.png");
+	mGrassStartTexture.setRepeated(true);
+	mGrassStartSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
+	mGrassStartSprite.setTexture(mGrassStartTexture);
+	mGrassStartSprite.setPosition(0, resolution.y-100);
+
+	mWaterTexture.loadFromFile("textures/water.png");
+	mWaterTexture.setRepeated(true);
+	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
+	mWaterSprite.setTexture(mWaterTexture);
+	mWaterSprite.setPosition(0, resolution.y-200);
 }

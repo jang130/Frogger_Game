@@ -12,7 +12,7 @@ Engine::Engine()
 	mBackgroundSprite.setTexture(mBackgroundTexture);
 
 	// Set player start position
-	sf::Vector2f playerPosition{resolution.x / 2, resolution.y - 50};
+	sf::Vector2f playerPosition{(resolution.x-mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
 	mPlayer.setPosition(playerPosition);
 }
 

@@ -5,14 +5,16 @@ class Player
 	private:
 	// Position of Player on the screen
 	sf::Vector2f mPosition;
+	sf::Vector2f mSize;
 
 	// Sprite of Player
 	sf::Sprite mSprite;
 
 	// Textures of Player
-	sf::Texture mTexture;
+	sf::Texture mTextureBack;
     sf::Texture mTextureRight;
     sf::Texture mTextureLeft;
+	sf::Texture mTextureFront;
 
 	// Which direction(s) is the player currently moving in
 	bool mLeftPressed;
@@ -44,6 +46,9 @@ class Player
 	void stopRight();
     void stopUp();
 	void stopDown();
+
+	unsigned int getHeight() const;
+	unsigned int getWidth() const;
 
 	// Function that is called once every frame to update display
 	void update(float elapsedTime);

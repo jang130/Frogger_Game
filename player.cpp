@@ -1,15 +1,25 @@
 #include "player.h"
+#include <iostream>
 
 Player::Player()
 {
 	// How fast does Player move?
 	mSpeed = 400;
 
+	mLeftPressed = false;
+	mRightPressed = false;
+	mDownPressed = false;
+	mUpPressed = false;
+
 	// Associate a texture with the sprite
-	mTexture.loadFromFile("textures/frog_player.png");
+	mTextureBack.loadFromFile("textures/frog_back.png");
     mTextureRight.loadFromFile("textures/frog_right.png");
     mTextureLeft.loadFromFile("textures/frog_left.png");
-	mSprite.setTexture(mTexture);
+	mTextureFront.loadFromFile("textures/frog_front.png");
+	mSprite.setTexture(mTextureBack);
+
+	mSize.x = mSprite.getTexture()->getSize().x * mSprite.getScale().x,
+    mSize.y = mSprite.getTexture()->getSize().y * mSprite.getScale().y;
 }
 
 void Player::setPosition(sf::Vector2f &pos)
@@ -62,6 +72,16 @@ void Player::stopDown()
 	mDownPressed = false;
 }
 
+unsigned int Player::getHeight() const
+{
+	return mSize.y;
+}
+
+unsigned int Player::getWidth() const
+{
+	return mSize.x;
+}
+
 // Move Player based on the input this frame,
 // the time elapsed, and the speed
 void Player::update(float elapsedTime)
@@ -80,13 +100,13 @@ void Player::update(float elapsedTime)
 
     if(mUpPressed)
 	{
-        mSprite.setTexture(mTexture);
+        mSprite.setTexture(mTextureBack);
 		mPosition.y -= mSpeed * elapsedTime;
 	}
 
 	if(mDownPressed)
 	{
-        mSprite.setTexture(mTexture);
+        mSprite.setTexture(mTextureFront);
 		mPosition.y += mSpeed * elapsedTime;
 	}
 

@@ -1,6 +1,6 @@
 CC = g++
 INCLUDES = -lsfml-graphics -lsfml-window -lsfml-system
-OBJS = main.o engine.o player.o
+OBJS = main.o engine.o player.o enemy.o canNotLoadTexture.o
 
 all: frogger clean
 

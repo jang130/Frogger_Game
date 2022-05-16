@@ -1,16 +1,33 @@
-#include "engine.h"
 #include <iostream>
+#include <memory>
+#include "engine.h"
+#include "canNotLoadTexture.h"
 
 Engine::Engine()
 {
 	// Create main game window
 	mWindow.create(sf::VideoMode(resolution.x, resolution.y), "Frogger Game");
 
-	loadTexturesAndSprites();
+	// Loads textures and Sprites for backround staff
+	loadBackgroundTexturesAndSprites();
 
-	// Set player start position
+	// Sets player initial position
 	sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
 	mPlayer.setPosition(playerPosition);
+
+	sf::Vector2f carPos = {0, resolution.y - 150};
+	std::shared_ptr<CarEnemy> newEnemy1 = std::make_shared<CarEnemy>("textures/car1.png", 100);
+	std::shared_ptr<CarEnemy> newEnemy2 = std::make_shared<CarEnemy>("textures/car1.png", 100);
+	std::shared_ptr<CarEnemy> newEnemy3 = std::make_shared<CarEnemy>("textures/car1.png", 100);
+	newEnemy1->setPosition(carPos);
+	carPos = {400, resolution.y - 150};
+	newEnemy2->setPosition(carPos);
+	carPos = {800, resolution.y - 150};
+	newEnemy3->setPosition(carPos);
+
+	mEnemies.carEnemiesLine1.push_back(newEnemy1);
+	mEnemies.carEnemiesLine1.push_back(newEnemy2);
+	mEnemies.carEnemiesLine1.push_back(newEnemy3);
 }
 
 void Engine::start()
@@ -105,6 +122,10 @@ void Engine::input()
 void Engine::update(float dtAsSeconds)
 {
 	mPlayer.update(dtAsSeconds);
+	for(std::shared_ptr<CarEnemy> &carEnemyObj: mEnemies.carEnemiesLine1)
+	{
+		carEnemyObj->update(dtAsSeconds);
+	}
 }
 
 void Engine::draw()
@@ -114,8 +135,12 @@ void Engine::draw()
 
 	// Draw the background
 	mWindow.draw(mGrassStartSprite);
-	mWindow.draw(mWaterSprite);
+	// mWindow.draw(mWaterSprite);
 	mWindow.draw(mPlayer.getSprite());
+	for(std::shared_ptr<CarEnemy> &carEnemyObj: mEnemies.carEnemiesLine1)
+	{
+		mWindow.draw(carEnemyObj->getSprite());
+	}
 
 	// Show everything we have just drawn
 	mWindow.display();
@@ -145,27 +170,38 @@ void Engine::checkWindowBoundCollision()
 		mPlayer.setPosition(newPos);
 	}
 
-	if(mPlayer.getSprite().getGlobalBounds().intersects(mWaterSprite.getGlobalBounds()))
+	for(std::shared_ptr<CarEnemy> &carEnemyObj: mEnemies.carEnemiesLine1)
 	{
-		//detect collision into water
-		sf::Vector2f newPos = {0, 0};
-		mPlayer.setPosition(newPos);
+		if(carEnemyObj->getPosition().x > resolution.x)
+		{
+			float xVal = carEnemyObj->getWidth();
+			sf::Vector2f newPos = {-xVal, carEnemyObj->getPosition().y};
+			carEnemyObj->setPosition(newPos);
+		}
 	}
-
+	// if(mPlayer.getSprite().getGlobalBounds().intersects(mWaterSprite.getGlobalBounds()))
+	// {
+	// 	//detect collision into water
+	// 	sf::Vector2f newPos = {0, 0};
+	// 	mPlayer.setPosition(newPos);
+	// }
 }
 
-void Engine::loadTexturesAndSprites()
+void Engine::loadBackgroundTexturesAndSprites()
 {
-// Load the background into the texture
-	mGrassStartTexture.loadFromFile("textures/grass_start.png");
+	// Load the background textures
+	if(!mGrassStartTexture.loadFromFile("textures/grass_start.png"))
+	{
+		throw CanNotLoadTexture();
+	}
 	mGrassStartTexture.setRepeated(true);
 	mGrassStartSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
 	mGrassStartSprite.setTexture(mGrassStartTexture);
-	mGrassStartSprite.setPosition(0, resolution.y-100);
+	mGrassStartSprite.setPosition(0, resolution.y - 100);
 
-	mWaterTexture.loadFromFile("textures/water.png");
-	mWaterTexture.setRepeated(true);
-	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
-	mWaterSprite.setTexture(mWaterTexture);
-	mWaterSprite.setPosition(0, resolution.y-200);
+	// mWaterTexture.loadFromFile("textures/water.png");
+	// mWaterTexture.setRepeated(true);
+	// mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
+	// mWaterSprite.setTexture(mWaterTexture);
+	// mWaterSprite.setPosition(0, resolution.y - 200);
 }

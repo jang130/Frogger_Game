@@ -1,6 +1,8 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
 #include "player.h"
+#include "enemy.h"
+#include <memory>
 
 class Engine
 {
@@ -10,7 +12,7 @@ class Engine
 	sf::Time timeElapsedFromLastFrame_ms = sf::milliseconds(0);
 
 	// Resolution display values
-	const sf::Vector2f resolution = {1000, 800};
+	const sf::Vector2f resolution = {1100, 800};
 
 	// A regular RenderWindow
 	sf::RenderWindow mWindow;
@@ -21,8 +23,10 @@ class Engine
 	sf::Sprite mWaterSprite;
 	sf::Texture mWaterTexture;
 
-	// An instance of Player
+	// An instances of Player and other enemies
 	Player mPlayer;
+
+	Enemies mEnemies;
 
 	// Private functions for internal use only
 	void input();
@@ -37,5 +41,5 @@ class Engine
 	void start();
 
 	void checkWindowBoundCollision();
-	void loadTexturesAndSprites();
+	void loadBackgroundTexturesAndSprites();
 };

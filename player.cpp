@@ -25,6 +25,7 @@ Player::Player()
 void Player::setPosition(sf::Vector2f &pos)
 {
 	mPosition = pos;
+	mSprite.setPosition(mPosition);
 }
 
 sf::Sprite Player::getSprite()
@@ -91,7 +92,6 @@ sf::Vector2f Player::getPosition() const
 // the time elapsed, and the speed
 void Player::update(float elapsedTime)
 {
-	sf::Vector2f tmpPositon = mPosition;
 	if(mRightPressed)
 	{
 		mSprite.setTexture(mTextureRight);

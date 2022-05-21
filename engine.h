@@ -20,8 +20,10 @@ class Engine
 	// Declare a sprite and a Texture for the background
 	sf::Sprite mGrassStartSprite;
 	sf::Texture mGrassStartTexture;
-	sf::Sprite mWaterSprite;
-	sf::Texture mWaterTexture;
+	sf::Sprite mGrassMidSprite;
+	sf::Texture mGrassMidTexture;
+	sf::Sprite mRoadSprite;
+	sf::Texture mRoadTexture;
 
 	// An instances of Player and other enemies
 	Player mPlayer;
@@ -32,6 +34,7 @@ class Engine
 	void input();
 	void update(float dtAsSeconds);
 	void draw();
+	void createCarEnemies(unsigned int linesToCreate);
 
 	public:
 	// The Engine constructor

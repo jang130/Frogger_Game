@@ -2,7 +2,7 @@
 #include "enemy.h"
 #include "canNotLoadTexture.h"
 
-Enemy::Enemy(std::string textureDir, unsigned int speed)
+Enemy::Enemy(std::string textureDir, float speed)
 {
 	// How fast does Player move?
 	mSpeed = speed;
@@ -42,6 +42,11 @@ unsigned int Enemy::getWidth() const
 sf::Vector2f Enemy::getPosition() const
 {
 	return mPosition;
+}
+
+int Enemy::getSpeed() const
+{
+	return mSpeed;
 }
 
 void Enemy::update(float elapsedTime)

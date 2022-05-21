@@ -24,6 +24,8 @@ class Engine
 	sf::Texture mGrassMidTexture;
 	sf::Sprite mRoadSprite;
 	sf::Texture mRoadTexture;
+	sf::Sprite mWaterSprite;
+	sf::Texture mWaterTexture;
 
 	// An instances of Player and other enemies
 	Player mPlayer;

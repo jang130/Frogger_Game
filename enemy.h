@@ -32,7 +32,7 @@ class CarEnemy : public Enemy
 
 struct Enemies
 {
-	const unsigned int enemiesLinesPlacementY[5] = {150, 220, 290, 360, 430};
+	const unsigned int enemiesLinesPlacementY[5] = {110, 180, 250, 320, 390};
     const unsigned int enemiesNumberInLine[5] = {3, 4, 3, 3, 3};
 	std::vector<std::vector<std::shared_ptr<CarEnemy>>> carEnemies;
 	std::vector<std::string> texturesForLines = {"textures/car1.png", "textures/car2.png", "textures/car3.png", "textures/car4.png", "textures/car5.png"};

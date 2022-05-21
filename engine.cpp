@@ -128,6 +128,7 @@ void Engine::draw()
 	mWindow.draw(mGrassStartSprite);
 	mWindow.draw(mGrassMidSprite);
 	mWindow.draw(mRoadSprite);
+	mWindow.draw(mWaterSprite);
 
 	mWindow.draw(mPlayer.getSprite());
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
@@ -214,7 +215,7 @@ void Engine::loadBackgroundTexturesAndSprites()
 	mGrassMidTexture.setRepeated(true);
 	mGrassMidSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
 	mGrassMidSprite.setTexture(mGrassMidTexture);
-	mGrassMidSprite.setPosition(0, resolution.y - 520);
+	mGrassMidSprite.setPosition(0, resolution.y - 480);
 
 	if(!mRoadTexture.loadFromFile("textures/road.png"))
 	{
@@ -223,13 +224,16 @@ void Engine::loadBackgroundTexturesAndSprites()
 	mRoadTexture.setRepeated(true);
 	mRoadSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 350));
 	mRoadSprite.setTexture(mRoadTexture);
-	mRoadSprite.setPosition(0, resolution.y - 435);
+	mRoadSprite.setPosition(0, resolution.y - 400);
 
-	// mWaterTexture.loadFromFile("textures/water.png");
-	// mWaterTexture.setRepeated(true);
-	// mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
-	// mWaterSprite.setTexture(mWaterTexture);
-	// mWaterSprite.setPosition(0, resolution.y - 200);
+	if(!mWaterTexture.loadFromFile("textures/water.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	mWaterTexture.setRepeated(true);
+	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 350));
+	mWaterSprite.setTexture(mWaterTexture);
+	mWaterSprite.setPosition(0, resolution.y - 830);
 }
 
 void Engine::createCarEnemies(unsigned int linesToCreate)

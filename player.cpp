@@ -121,3 +121,19 @@ void Player::update(float elapsedTime)
 	// Now move the sprite to its new position
 	mSprite.setPosition(mPosition);
 }
+
+void Player::movePositionWithLog(float elapsedTime,double logSpeed)
+{
+	mPosition.x += logSpeed * elapsedTime;
+	mSprite.setPosition(mPosition);
+}
+
+void Player::setMoveWithLog(bool state)
+{
+	moveWithLog = state;
+}
+
+bool Player::getMoveWithLog()
+{
+	return moveWithLog;
+}

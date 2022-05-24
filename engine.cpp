@@ -16,6 +16,7 @@ Engine::Engine()
 	mPlayer.setPosition(playerPosition);
 
 	createCarEnemies(5);
+	createLogEnemies(1);
 }
 
 void Engine::start()
@@ -110,11 +111,23 @@ void Engine::input()
 void Engine::update(float dtAsSeconds)
 {
 	mPlayer.update(dtAsSeconds);
+	if(mPlayer.getMoveWithLog() == true)
+	{
+		mPlayer.movePositionWithLog(dtAsSeconds, mEnemies.logSpeedsForLines[0]);
+	}
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		for(std::shared_ptr<CarEnemy> &carEnemyObj: line)
 		{
 			carEnemyObj->update(dtAsSeconds);
+		}
+	}
+
+	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
+	{
+		for(std::shared_ptr<LogEnemy> &logEnemyObj: line)
+		{
+			logEnemyObj->update(dtAsSeconds);
 		}
 	}
 }
@@ -130,7 +143,16 @@ void Engine::draw()
 	mWindow.draw(mRoadSprite);
 	mWindow.draw(mWaterSprite);
 
+	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
+	{
+		for(std::shared_ptr<LogEnemy> &logEnemyObj: line)
+		{
+			mWindow.draw(logEnemyObj->getSprite());
+		}
+	}
+
 	mWindow.draw(mPlayer.getSprite());
+
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		for(std::shared_ptr<CarEnemy> &carEnemyObj: line)
@@ -194,6 +216,38 @@ void Engine::checkWindowBoundCollision()
 			}
 		}
 	}
+
+	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
+	{
+		for(std::shared_ptr<LogEnemy> &logEnemyObj: line)
+		{
+			if(logEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
+			{
+				mPlayer.setMoveWithLog(true);
+			}
+			else
+			{
+				mPlayer.setMoveWithLog(false);
+			}
+			if(logEnemyObj->getSpeed() > 0)
+			{
+				if(logEnemyObj->getPosition().x > resolution.x)
+				{
+					float xVal = logEnemyObj->getWidth();
+					sf::Vector2f newPos = {-xVal, logEnemyObj->getPosition().y};
+					logEnemyObj->setPosition(newPos);
+				}
+			}
+			else
+			{
+				if(logEnemyObj->getPosition().x + logEnemyObj->getWidth() < 0)
+				{
+					sf::Vector2f newPos = {resolution.x, logEnemyObj->getPosition().y};
+					logEnemyObj->setPosition(newPos);
+				}
+			}
+		}
+	}
 }
 
 void Engine::loadBackgroundTexturesAndSprites()
@@ -247,14 +301,38 @@ void Engine::createCarEnemies(unsigned int linesToCreate)
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		float xPush = 0;
-		for(int i = 0; i < mEnemies.enemiesNumberInLine[lineNumber]; ++i)
+		for(int i = 0; i < mEnemies.carEnemiesNumberInLine[lineNumber]; ++i)
 		{
-			sf::Vector2f carPos = {xPush, resolution.y - mEnemies.enemiesLinesPlacementY[lineNumber]};
+			sf::Vector2f carPos = {xPush, resolution.y - mEnemies.carEnemiesLinesPlacementY[lineNumber]};
 			std::shared_ptr<CarEnemy> newEnemy =
-			  std::make_shared<CarEnemy>(mEnemies.texturesForLines[lineNumber], mEnemies.speedsForLines[lineNumber]);
+			  std::make_shared<CarEnemy>(mEnemies.carTexturesForLines[lineNumber], mEnemies.carSpeedsForLines[lineNumber]);
 			newEnemy->setPosition(carPos);
 			line.push_back(newEnemy);
-			xPush = xPush + (resolution.x / mEnemies.enemiesNumberInLine[lineNumber]);
+			xPush = xPush + (resolution.x / mEnemies.carEnemiesNumberInLine[lineNumber]);
+		}
+		lineNumber++;
+	}
+}
+
+void Engine::createLogEnemies(unsigned int linesToCreate)
+{
+	for(int i = 0; i < linesToCreate; ++i)
+	{
+		std::vector<std::shared_ptr<LogEnemy>> logEnemyLine;
+		mEnemies.logEnemies.push_back(logEnemyLine);
+	}
+	unsigned int lineNumber = 0;
+	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
+	{
+		float xPush = 0;
+		for(int i = 0; i < mEnemies.logEnemiesNumberInLine[lineNumber]; ++i)
+		{
+			sf::Vector2f logPos = {xPush, resolution.y - mEnemies.logEnemiesLinesPlacementY[lineNumber]};
+			std::shared_ptr<LogEnemy> newEnemy =
+			  std::make_shared<LogEnemy>(mEnemies.logTexturesForLines[lineNumber], mEnemies.logSpeedsForLines[lineNumber]);
+			newEnemy->setPosition(logPos);
+			line.push_back(newEnemy);
+			xPush = xPush + (resolution.x / mEnemies.logEnemiesNumberInLine[lineNumber]);
 		}
 		lineNumber++;
 	}

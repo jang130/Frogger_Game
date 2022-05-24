@@ -37,6 +37,7 @@ class Engine
 	void update(float dtAsSeconds);
 	void draw();
 	void createCarEnemies(unsigned int linesToCreate);
+	void createLogEnemies(unsigned int linesToCreate);
 
 	public:
 	// The Engine constructor

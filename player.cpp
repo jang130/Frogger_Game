@@ -122,18 +122,18 @@ void Player::update(float elapsedTime)
 	mSprite.setPosition(mPosition);
 }
 
-void Player::movePositionWithLog(float elapsedTime,double logSpeed)
+void Player::movePositionWithLog(float elapsedTime)
 {
-	mPosition.x += logSpeed * elapsedTime;
+	mPosition.x += getMoveWithLogSpeed() * elapsedTime;
 	mSprite.setPosition(mPosition);
 }
 
-void Player::setMoveWithLog(bool state)
+void Player::setMoveWithLog(double speed)
 {
-	moveWithLog = state;
+	moveWithLog = speed;
 }
 
-bool Player::getMoveWithLog()
+double Player::getMoveWithLogSpeed()
 {
 	return moveWithLog;
 }

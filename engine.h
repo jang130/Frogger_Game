@@ -46,6 +46,6 @@ class Engine
 	// start will call all the private functions
 	void start();
 
-	void checkWindowBoundCollision();
+	void checkCollision();
 	void loadBackgroundTexturesAndSprites();
 };

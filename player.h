@@ -25,7 +25,7 @@ class Player
 	// Player's speed in pixels per second
 	float mSpeed;
 
-	bool moveWithLog = false;
+	double moveWithLog = 0;
 
 	public:
 	// Constructor
@@ -53,9 +53,9 @@ class Player
 	unsigned int getWidth() const;
 	sf::Vector2f getPosition() const;
 
-	void setMoveWithLog(bool state);
-	bool getMoveWithLog();
-	void movePositionWithLog(float elapsedTime,double logSpeed);
+	void setMoveWithLog(double speed=0);
+	double getMoveWithLogSpeed();
+	void movePositionWithLog(float elapsedTime);
 
 	// Function that is called once every frame to update display
 	void update(float elapsedTime);

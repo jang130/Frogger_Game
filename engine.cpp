@@ -16,7 +16,7 @@ Engine::Engine()
 	mPlayer.setPosition(playerPosition);
 
 	createCarEnemies(5);
-	createLogEnemies(1);
+	createLogEnemies(4);
 }
 
 void Engine::start()
@@ -50,7 +50,7 @@ void Engine::start()
 		// Make a fraction from the delta time
 		float dtAsSeconds = dt.asSeconds();
 		update(dtAsSeconds);
-		checkWindowBoundCollision();
+		checkCollision();
 
 		// check time elapsed for frame displaying
 		timeElapsedFromLastFrame_ms = clock_frames.getElapsedTime();
@@ -111,10 +111,7 @@ void Engine::input()
 void Engine::update(float dtAsSeconds)
 {
 	mPlayer.update(dtAsSeconds);
-	if(mPlayer.getMoveWithLog() == true)
-	{
-		mPlayer.movePositionWithLog(dtAsSeconds, mEnemies.logSpeedsForLines[0]);
-	}
+	mPlayer.movePositionWithLog(dtAsSeconds);
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		for(std::shared_ptr<CarEnemy> &carEnemyObj: line)
@@ -164,7 +161,7 @@ void Engine::draw()
 	mWindow.display();
 }
 
-void Engine::checkWindowBoundCollision()
+void Engine::checkCollision()
 {
 	if(mPlayer.getPosition().x < 0)
 	{
@@ -217,18 +214,17 @@ void Engine::checkWindowBoundCollision()
 		}
 	}
 
+	mPlayer.setMoveWithLog(0);
+	int i = 0;
 	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
 	{
 		for(std::shared_ptr<LogEnemy> &logEnemyObj: line)
 		{
 			if(logEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
 			{
-				mPlayer.setMoveWithLog(true);
+				mPlayer.setMoveWithLog(mEnemies.logSpeedsForLines[i]);
 			}
-			else
-			{
-				mPlayer.setMoveWithLog(false);
-			}
+
 			if(logEnemyObj->getSpeed() > 0)
 			{
 				if(logEnemyObj->getPosition().x > resolution.x)
@@ -246,6 +242,16 @@ void Engine::checkWindowBoundCollision()
 					logEnemyObj->setPosition(newPos);
 				}
 			}
+		}
+		i++;
+	}
+
+	if(mPlayer.getMoveWithLogSpeed() == 0)
+	{
+		if(mWaterSprite.getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
+		{
+			sf::Vector2f newPos = {resolution.x / 2, resolution.y};
+			mPlayer.setPosition(newPos);
 		}
 	}
 }
@@ -285,9 +291,9 @@ void Engine::loadBackgroundTexturesAndSprites()
 		throw CanNotLoadTexture();
 	}
 	mWaterTexture.setRepeated(true);
-	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 350));
+	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 270));
 	mWaterSprite.setTexture(mWaterTexture);
-	mWaterSprite.setPosition(0, resolution.y - 830);
+	mWaterSprite.setPosition(0, 50);
 }
 
 void Engine::createCarEnemies(unsigned int linesToCreate)

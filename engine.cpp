@@ -232,14 +232,14 @@ void Engine::checkPlayerCarEnemyCollision()
 void Engine::checkPlayerLogEnemyCollision()
 {
 	mPlayer.setMoveWithLog(0);
-	int i = 0;
-	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
+	int i = (sizeof(mEnemies.logEnemiesNumberInLine)/sizeof(int));
+	for(auto it = mEnemies.logEnemies.rbegin(); it != mEnemies.logEnemies.rend(); ++it)
 	{
-		for(std::shared_ptr<LogEnemy> &logEnemyObj: line)
+		for(std::shared_ptr<LogEnemy> &logEnemyObj: *it)
 		{
 			if(logEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
 			{
-				mPlayer.setMoveWithLog(mEnemies.logSpeedsForLines[i]);
+				mPlayer.setMoveWithLog(mEnemies.logSpeedsForLines[i-1]);
 			}
 
 			if(logEnemyObj->getSpeed() > 0)
@@ -260,7 +260,7 @@ void Engine::checkPlayerLogEnemyCollision()
 				}
 			}
 		}
-		i++;
+		i--;
 	}
 }
 
@@ -315,7 +315,7 @@ void Engine::loadBackgroundTexturesAndSprites()
 	mWaterSprite.setTexture(mWaterTexture);
 	mWaterSprite.setPosition(0, 60);
 
-	sf::Vector2f position(mWaterSprite.getPosition().x ,mWaterSprite.getPosition().y + 20);
+	sf::Vector2f position(mWaterSprite.getPosition().x, mWaterSprite.getPosition().y + 20);
 	sf::Vector2f size(resolution.x, 230);
 	sf::FloatRect hitbox(position, size);
 	mWaterHitbox = hitbox;

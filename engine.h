@@ -3,6 +3,7 @@
 #include "player.h"
 #include "enemy.h"
 #include <memory>
+#include <iterator>
 
 class Engine
 {

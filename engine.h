@@ -47,5 +47,9 @@ class Engine
 	void start();
 
 	void checkCollision();
+	void checkPlayerBoundCollision();
+	void checkPlayerCarEnemyCollision();
+	void checkPlayerWaterCollision();
+	void checkPlayerLogEnemyCollision();
 	void loadBackgroundTexturesAndSprites();
 };

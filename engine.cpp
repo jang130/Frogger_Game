@@ -163,6 +163,17 @@ void Engine::draw()
 
 void Engine::checkCollision()
 {
+	checkPlayerBoundCollision();
+
+	checkPlayerCarEnemyCollision();
+
+	checkPlayerLogEnemyCollision();
+
+	checkPlayerWaterCollision();
+}
+
+void Engine::checkPlayerBoundCollision()
+{
 	if(mPlayer.getPosition().x < 0)
 	{
 		sf::Vector2f newPos = {0, mPlayer.getPosition().y};
@@ -184,7 +195,10 @@ void Engine::checkCollision()
 		sf::Vector2f newPos = {mPlayer.getPosition().x, resolution.y - mPlayer.getHeight()};
 		mPlayer.setPosition(newPos);
 	}
+}
 
+void Engine::checkPlayerCarEnemyCollision()
+{
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		for(std::shared_ptr<CarEnemy> &carEnemyObj: line)
@@ -213,7 +227,10 @@ void Engine::checkCollision()
 			}
 		}
 	}
+}
 
+void Engine::checkPlayerLogEnemyCollision()
+{
 	mPlayer.setMoveWithLog(0);
 	int i = 0;
 	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
@@ -245,7 +262,10 @@ void Engine::checkCollision()
 		}
 		i++;
 	}
+}
 
+void Engine::checkPlayerWaterCollision()
+{
 	if(mPlayer.getMoveWithLogSpeed() == 0)
 	{
 		if(mWaterSprite.getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))

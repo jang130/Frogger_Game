@@ -16,7 +16,7 @@ Engine::Engine()
 	mPlayer.setPosition(playerPosition);
 
 	createCarEnemies(5);
-	createLogEnemies(4);
+	createLogEnemies(5);
 }
 
 void Engine::start()
@@ -268,7 +268,7 @@ void Engine::checkPlayerWaterCollision()
 {
 	if(mPlayer.getMoveWithLogSpeed() == 0)
 	{
-		if(mWaterSprite.getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
+		if(mWaterHitbox.intersects(mPlayer.getSprite().getGlobalBounds()))
 		{
 			sf::Vector2f newPos = {resolution.x / 2, resolution.y};
 			mPlayer.setPosition(newPos);
@@ -311,9 +311,14 @@ void Engine::loadBackgroundTexturesAndSprites()
 		throw CanNotLoadTexture();
 	}
 	mWaterTexture.setRepeated(true);
-	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 270));
+	mWaterSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 260));
 	mWaterSprite.setTexture(mWaterTexture);
-	mWaterSprite.setPosition(0, 50);
+	mWaterSprite.setPosition(0, 60);
+
+	sf::Vector2f position(mWaterSprite.getPosition().x ,mWaterSprite.getPosition().y + 20);
+	sf::Vector2f size(resolution.x, 230);
+	sf::FloatRect hitbox(position, size);
+	mWaterHitbox = hitbox;
 }
 
 void Engine::createCarEnemies(unsigned int linesToCreate)

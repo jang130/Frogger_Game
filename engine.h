@@ -26,6 +26,7 @@ class Engine
 	sf::Texture mRoadTexture;
 	sf::Sprite mWaterSprite;
 	sf::Texture mWaterTexture;
+	sf::FloatRect mWaterHitbox;
 
 	// An instances of Player and other enemies
 	Player mPlayer;

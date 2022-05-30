@@ -43,9 +43,9 @@ struct Enemies
 	std::vector<std::string> carTexturesForLines = {"textures/car1.png", "textures/car2.png", "textures/car3.png", "textures/car4.png", "textures/car5.png"};
 	std::vector<int> carSpeedsForLines = {100, -150, 200, 300, -50};
 
-	const unsigned int logEnemiesLinesPlacementY[4] = {520, 590, 660, 730};
-    const unsigned int logEnemiesNumberInLine[4] = {5 ,4, 3, 2};
+	const unsigned int logEnemiesLinesPlacementY[5] = {520, 570, 620, 670, 720};
+    const unsigned int logEnemiesNumberInLine[5] = {4 ,3, 3, 2, 2};
 	std::vector<std::vector<std::shared_ptr<LogEnemy>>> logEnemies;
-	std::vector<std::string> logTexturesForLines = {"textures/log1.png", "textures/log1.png", "textures/log1.png", "textures/log1.png"};
-	std::vector<int> logSpeedsForLines = {50, -50, 75, -100};
+	std::vector<std::string> logTexturesForLines = {"textures/log1.png", "textures/log1.png", "textures/log1.png", "textures/log1.png", "textures/log1.png"};
+	std::vector<int> logSpeedsForLines = {50, -80, 100, -120, 150};
 };

@@ -59,4 +59,5 @@ class Player
 
 	// Function that is called once every frame to update display
 	void update(float elapsedTime);
+	void die(sf::Vector2f newPos);
 };

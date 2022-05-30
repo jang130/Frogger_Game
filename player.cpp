@@ -137,3 +137,8 @@ double Player::getMoveWithLogSpeed()
 {
 	return moveWithLog;
 }
+
+void Player::die(sf::Vector2f newPos)
+{
+	setPosition(newPos);
+}

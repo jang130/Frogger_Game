@@ -206,7 +206,7 @@ void Engine::checkPlayerCarEnemyCollision()
 			if(carEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
 			{
 				sf::Vector2f newPos = {(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
-				mPlayer.setPosition(newPos);
+				mPlayer.die(newPos);
 			}
 			if(carEnemyObj->getSpeed() > 0)
 			{
@@ -271,7 +271,7 @@ void Engine::checkPlayerWaterCollision()
 		if(mWaterHitbox.intersects(mPlayer.getSprite().getGlobalBounds()))
 		{
 			sf::Vector2f newPos = {resolution.x / 2, resolution.y};
-			mPlayer.setPosition(newPos);
+			mPlayer.die(newPos);
 		}
 	}
 }

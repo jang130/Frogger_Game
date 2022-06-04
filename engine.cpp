@@ -17,6 +17,11 @@ Engine::Engine()
 
 	createCarEnemies(5);
 	createLogEnemies(5);
+
+	Menu newMenu(resolution.x, resolution.y);
+	mMenu = newMenu;
+
+	screenToDisplay = menu;
 }
 
 void Engine::start()
@@ -28,6 +33,7 @@ void Engine::start()
 
 	while(mWindow.isOpen())
 	{
+
 		sf::Event event;
 		while(mWindow.pollEvent(event))
 		{
@@ -49,15 +55,25 @@ void Engine::start()
 
 		// Make a fraction from the delta time
 		float dtAsSeconds = dt.asSeconds();
-		update(dtAsSeconds);
-		checkCollision();
 
+		if(screenToDisplay == menu)
+		{
+			mMenu.draw(mWindow);
+		}
+		else if(screenToDisplay == game)
+		{
+			update(dtAsSeconds);
+			checkCollision();
+
+			draw();
+		}
 		// check time elapsed for frame displaying
 		timeElapsedFromLastFrame_ms = clock_frames.getElapsedTime();
 		if(timeElapsedFromLastFrame_ms >= frameDelay_ms)
 		{
 			clock_frames.restart();
-			draw();
+			// Show everything we have just drawn
+			mWindow.display();
 		}
 	}
 }
@@ -70,41 +86,110 @@ void Engine::input()
 		mWindow.close();
 	}
 
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+	{
+		if(screenToDisplay == menu)
+		{
+			switch(mMenu.GetPressedItem())
+			{
+			case 0:
+				screenToDisplay = game;
+				break;
+			case 1:
+				//
+				break;
+			case 2:
+				mWindow.close();
+				break;
+			}
+		}
+	}
+
 	// Handle the player moving
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		mPlayer.moveLeft();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.moveLeft();
+		}
 	}
 	else
 	{
-		mPlayer.stopLeft();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.stopLeft();
+		}
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		mPlayer.moveRight();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.moveRight();
+		}
 	}
 	else
 	{
-		mPlayer.stopRight();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.stopRight();
+		}
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		mPlayer.moveUp();
+		if(screenToDisplay == menu)
+		{
+			mMenu.MoveUp();
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.moveUp();
+		}
 	}
 	else
 	{
-		mPlayer.stopUp();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.stopUp();
+		}
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		mPlayer.moveDown();
+		if(screenToDisplay == menu)
+		{
+			mMenu.MoveDown();
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.moveDown();
+		}
 	}
 	else
 	{
-		mPlayer.stopDown();
+		if(screenToDisplay == menu)
+		{
+		}
+		else if(screenToDisplay == game)
+		{
+			mPlayer.stopDown();
+		}
 	}
 }
 
@@ -157,8 +242,6 @@ void Engine::draw()
 			mWindow.draw(carEnemyObj->getSprite());
 		}
 	}
-	// Show everything we have just drawn
-	mWindow.display();
 }
 
 void Engine::checkCollision()
@@ -232,14 +315,14 @@ void Engine::checkPlayerCarEnemyCollision()
 void Engine::checkPlayerLogEnemyCollision()
 {
 	mPlayer.setMoveWithLog(0);
-	int i = (sizeof(mEnemies.logEnemiesNumberInLine)/sizeof(int));
+	int i = (sizeof(mEnemies.logEnemiesNumberInLine) / sizeof(int));
 	for(auto it = mEnemies.logEnemies.rbegin(); it != mEnemies.logEnemies.rend(); ++it)
 	{
 		for(std::shared_ptr<LogEnemy> &logEnemyObj: *it)
 		{
 			if(logEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
 			{
-				mPlayer.setMoveWithLog(mEnemies.logSpeedsForLines[i-1]);
+				mPlayer.setMoveWithLog(mEnemies.logSpeedsForLines[i - 1]);
 			}
 
 			if(logEnemyObj->getSpeed() > 0)

@@ -2,8 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include "player.h"
 #include "enemy.h"
+#include "menu.h"
 #include <memory>
 #include <iterator>
+
+enum ScreenToDisplay
+{
+	menu,
+	game
+};
 
 class Engine
 {
@@ -14,9 +21,6 @@ class Engine
 
 	// Resolution display values
 	const sf::Vector2f resolution = {1100, 800};
-
-	// A regular RenderWindow
-	sf::RenderWindow mWindow;
 
 	// Declare a sprite and a Texture for the background
 	sf::Sprite mGrassStartSprite;
@@ -34,6 +38,7 @@ class Engine
 
 	Enemies mEnemies;
 
+	Menu mMenu;
 	// Private functions for internal use only
 	void input();
 	void update(float dtAsSeconds);
@@ -54,4 +59,9 @@ class Engine
 	void checkPlayerWaterCollision();
 	void checkPlayerLogEnemyCollision();
 	void loadBackgroundTexturesAndSprites();
+
+	ScreenToDisplay screenToDisplay;
+
+	// A regular RenderWindow
+	sf::RenderWindow mWindow;
 };

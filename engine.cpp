@@ -11,6 +11,12 @@ Engine::Engine()
 	Menu newMenu(resolution.x, resolution.y);
 	mMenu = newMenu;
 
+	playerText.setScale(1, 1);
+	playerText.setFont(font);
+	playerText.setFillColor(sf::Color::Black);
+	playerText.setPosition(0, 0);
+	//resolution.x - playerText.getLocalBounds().width*playerText.getScale().x / 2, resolution.y - playerText.getLocalBounds().height*playerText.getScale().y / 2);
+
 	screenToDisplay = menu;
 }
 
@@ -37,6 +43,10 @@ void Engine::start()
 					break;
 				case sf::Event::KeyReleased:
 					input();
+				case sf::Event::TextEntered:
+					playerInput += event.text.unicode;
+					playerText.setString(playerInput);
+					break;
 			}
 		}
 
@@ -45,6 +55,7 @@ void Engine::start()
 
 		// Make a fraction from the delta time
 		float dtAsSeconds = dt.asSeconds();
+		playingTime = playingTime + dtAsSeconds;
 
 		if(screenToDisplay == menu)
 		{
@@ -61,7 +72,17 @@ void Engine::start()
 			}
 
 			draw();
+			if(safetyZone[0] && safetyZone[1] && safetyZone[2] && safetyZone[3] &&safetyZone[4])
+			{
+				wonGame();
+			}
 		}
+		else if (screenToDisplay == scoreSave)
+		{
+			mWindow.clear(sf::Color::White);
+			mWindow.draw(playerText);
+		}
+
 		// check time elapsed for frame displaying
 		timeElapsedFromLastFrame_ms = clock_frames.getElapsedTime();
 		if(timeElapsedFromLastFrame_ms >= frameDelay_ms)
@@ -88,6 +109,7 @@ void Engine::input()
 			switch(mMenu.GetPressedItem())
 			{
 				case 0:
+					playingTime = 0;
 					screenToDisplay = game;
 					resetGame();
 					break;
@@ -244,6 +266,12 @@ void Engine::draw()
 			mWindow.draw(carEnemyObj->getSprite());
 		}
 	}
+
+	char textToDisplayChar[20];
+	sprintf(textToDisplayChar, "%.3f", playingTime);
+	sf::String textToDisplay(textToDisplayChar);
+	playingTimeDisplay.setString(textToDisplay);
+	mWindow.draw(playingTimeDisplay);
 }
 
 bool Engine::checkCollision()
@@ -480,6 +508,20 @@ void Engine::loadBackgroundTexturesAndSprites()
 	{
 		throw CanNotLoadTexture();
 	}
+
+	if(!font.loadFromFile("pixelText2.ttf"))
+	{
+		// handle error
+	}
+	playingTimeDisplay.setScale(1, 1);
+	playingTimeDisplay.setFont(font);
+	playingTimeDisplay.setFillColor(sf::Color::Black);
+	char textToDisplayChar[20];
+	sprintf(textToDisplayChar, "%.3f", playingTime);
+	sf::String textToDisplay(textToDisplayChar);
+	playingTimeDisplay.setString(textToDisplay);
+	playingTimeDisplay.setPosition(
+	  0, resolution.y - 1 - playingTimeDisplay.getLocalBounds().height * playingTimeDisplay.getScale().y);
 }
 
 void Engine::createCarEnemies(unsigned int linesToCreate)
@@ -546,4 +588,15 @@ void Engine::resetGame()
 
 	createCarEnemies(5);
 	createLogEnemies(5);
+
+	safetyZone[0] = false;
+	safetyZone[1] = false;
+	safetyZone[2] = false;
+	safetyZone[3] = false;
+	safetyZone[4] = false;
+}
+
+void Engine::wonGame()
+{
+	screenToDisplay = scoreSave;
 }

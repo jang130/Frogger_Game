@@ -9,7 +9,8 @@
 enum ScreenToDisplay
 {
 	menu,
-	game
+	game,
+	scoreSave
 };
 
 class Engine
@@ -28,7 +29,7 @@ class Engine
 	// Declare a sprite and a Texture for the background
 	sf::Sprite mGrassStartSprite;
 	sf::Texture mGrassStartTexture;
-	sf::Sprite mGrassMetaSprite[5];	//when using std::vector, segmentation fault occurs
+	sf::Sprite mGrassMetaSprite[5]; // when using std::vector, segmentation fault occurs
 	std::vector<sf::FloatRect> mGrassMetaHitbox;
 	sf::Texture mGrassMetaTexture;
 	sf::Sprite mGrassMidSprite;
@@ -41,6 +42,10 @@ class Engine
 	sf::Sprite mWaterSprite;
 	sf::Texture mWaterTexture;
 	sf::FloatRect mWaterHitbox;
+	sf::Text playingTimeDisplay;
+	sf::Font font;
+	sf::String playerInput;
+	sf::Text playerText;
 
 	// An instances of Player and other enemies
 	Player mPlayer;
@@ -50,6 +55,8 @@ class Engine
 	Menu mMenu;
 
 	bool safetyZone[5] = {false, false, false, false, false};
+
+	float playingTime = 0;
 
 	// Private functions for internal use only
 	void input();
@@ -73,6 +80,7 @@ class Engine
 	void checkPlayerMetaCollision();
 	void loadBackgroundTexturesAndSprites();
 	void resetGame();
+	void wonGame();
 
 	ScreenToDisplay screenToDisplay;
 };

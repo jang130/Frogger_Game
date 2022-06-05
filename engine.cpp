@@ -8,15 +8,7 @@ Engine::Engine()
 	// Create main game window
 	mWindow.create(sf::VideoMode(resolution.x, resolution.y), "Frogger Game");
 
-	// Loads textures and Sprites for backround staff
-	loadBackgroundTexturesAndSprites();
-
-	// Sets player initial position
-	sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
-	mPlayer.setPosition(playerPosition);
-
-	createCarEnemies(5);
-	createLogEnemies(5);
+	resetGame();
 
 	Menu newMenu(resolution.x, resolution.y);
 	mMenu = newMenu;
@@ -63,7 +55,12 @@ void Engine::start()
 		else if(screenToDisplay == game)
 		{
 			update(dtAsSeconds);
-			checkCollision();
+			bool state = checkCollision();
+			if(!state)
+			{
+				resetGame();
+				screenToDisplay = menu;
+			}
 
 			draw();
 		}
@@ -92,15 +89,16 @@ void Engine::input()
 		{
 			switch(mMenu.GetPressedItem())
 			{
-			case 0:
-				screenToDisplay = game;
-				break;
-			case 1:
-				//
-				break;
-			case 2:
-				mWindow.close();
-				break;
+				case 0:
+					screenToDisplay = game;
+					resetGame();
+					break;
+				case 1:
+					//
+					break;
+				case 2:
+					mWindow.close();
+					break;
 			}
 		}
 	}
@@ -223,7 +221,13 @@ void Engine::draw()
 	mWindow.draw(mGrassStartSprite);
 	mWindow.draw(mGrassMidSprite);
 	mWindow.draw(mRoadSprite);
+	mWindow.draw(mGrassEndSprite);
 	mWindow.draw(mWaterSprite);
+
+	for(sf::Sprite grassMeta: mGrassMetaSprite)
+	{
+		mWindow.draw(grassMeta);
+	}
 
 	for(std::vector<std::shared_ptr<LogEnemy>> &line: mEnemies.logEnemies)
 	{
@@ -244,15 +248,27 @@ void Engine::draw()
 	}
 }
 
-void Engine::checkCollision()
+bool Engine::checkCollision()
 {
+	bool state;
 	checkPlayerBoundCollision();
 
-	checkPlayerCarEnemyCollision();
+	state = checkPlayerCarEnemyCollision();
+	if(!state)
+	{
+		return false;
+	}
 
 	checkPlayerLogEnemyCollision();
 
-	checkPlayerWaterCollision();
+	state = checkPlayerWaterCollision();
+	if(!state)
+	{
+		return false;
+	}
+
+	checkPlayerMetaCollision();
+	return true;
 }
 
 void Engine::checkPlayerBoundCollision()
@@ -280,8 +296,9 @@ void Engine::checkPlayerBoundCollision()
 	}
 }
 
-void Engine::checkPlayerCarEnemyCollision()
+bool Engine::checkPlayerCarEnemyCollision()
 {
+	bool state;
 	for(std::vector<std::shared_ptr<CarEnemy>> &line: mEnemies.carEnemies)
 	{
 		for(std::shared_ptr<CarEnemy> &carEnemyObj: line)
@@ -289,7 +306,11 @@ void Engine::checkPlayerCarEnemyCollision()
 			if(carEnemyObj->getSprite().getGlobalBounds().intersects(mPlayer.getSprite().getGlobalBounds()))
 			{
 				sf::Vector2f newPos = {(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
-				mPlayer.die(newPos);
+				state = mPlayer.die(newPos);
+				if(!state)
+				{
+					return false;
+				}
 			}
 			if(carEnemyObj->getSpeed() > 0)
 			{
@@ -310,6 +331,7 @@ void Engine::checkPlayerCarEnemyCollision()
 			}
 		}
 	}
+	return true;
 }
 
 void Engine::checkPlayerLogEnemyCollision()
@@ -347,15 +369,35 @@ void Engine::checkPlayerLogEnemyCollision()
 	}
 }
 
-void Engine::checkPlayerWaterCollision()
+bool Engine::checkPlayerWaterCollision()
 {
+	bool state;
 	if(mPlayer.getMoveWithLogSpeed() == 0)
 	{
 		if(mWaterHitbox.intersects(mPlayer.getSprite().getGlobalBounds()))
 		{
 			sf::Vector2f newPos = {resolution.x / 2, resolution.y};
-			mPlayer.die(newPos);
+			state = mPlayer.die(newPos);
+			if(!state)
+			{
+				return false;
+			}
 		}
+	}
+	return true;
+}
+
+void Engine::checkPlayerMetaCollision()
+{
+	unsigned int i = 0;
+	for(sf::FloatRect &metaHitbox: mGrassMetaHitbox)
+	{
+		if(metaHitbox.intersects(mPlayer.getSprite().getGlobalBounds()))
+		{
+			safetyZone[i] = true;
+			mGrassMetaSprite[i].setTexture(mGrassMetaTextureAchieved);
+		}
+		i++;
 	}
 }
 
@@ -402,10 +444,47 @@ void Engine::loadBackgroundTexturesAndSprites()
 	sf::Vector2f size(resolution.x, 230);
 	sf::FloatRect hitbox(position, size);
 	mWaterHitbox = hitbox;
+
+	if(!mGrassMetaTexture.loadFromFile("textures/grass_meta.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	sf::Sprite grassMeta;
+	sf::FloatRect grassMetaHitbox;
+
+	for(int i = 0; i < 5; ++i)
+	{
+		grassMeta.setTextureRect(sf::IntRect(0, 0, 50, 50));
+		grassMeta.setTexture(mGrassMetaTexture);
+		grassMeta.setPosition((resolution.x - 50) / 4 * i, 0);
+		mGrassMetaSprite.push_back(grassMeta);
+
+		sf::Vector2f position(grassMeta.getPosition().x+25, grassMeta.getPosition().y);
+		sf::Vector2f size(1, 1);
+		sf::FloatRect hitbox(position, size);
+		grassMetaHitbox = hitbox;
+		mGrassMetaHitbox.push_back(grassMetaHitbox);
+	}
+
+	if(!mGrassEndTexture.loadFromFile("textures/grass_start.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	mGrassEndTexture.setRepeated(true);
+	mGrassEndSprite.setTextureRect(sf::IntRect(0, 0, resolution.x, 100));
+	mGrassEndSprite.setTexture(mGrassEndTexture);
+	mGrassEndSprite.setPosition(0, 0);
+
+	if(!mGrassMetaTextureAchieved.loadFromFile("textures/frog_front.png"))
+	{
+		throw CanNotLoadTexture();
+	}
 }
 
 void Engine::createCarEnemies(unsigned int linesToCreate)
 {
+	mEnemies.carEnemies.clear();
+
 	for(int i = 0; i < linesToCreate; ++i)
 	{
 		std::vector<std::shared_ptr<CarEnemy>> carEnemyLine;
@@ -430,6 +509,8 @@ void Engine::createCarEnemies(unsigned int linesToCreate)
 
 void Engine::createLogEnemies(unsigned int linesToCreate)
 {
+	mEnemies.logEnemies.clear();
+
 	for(int i = 0; i < linesToCreate; ++i)
 	{
 		std::vector<std::shared_ptr<LogEnemy>> logEnemyLine;
@@ -450,4 +531,18 @@ void Engine::createLogEnemies(unsigned int linesToCreate)
 		}
 		lineNumber++;
 	}
+}
+
+void Engine::resetGame()
+{
+	// Loads textures and Sprites for backround staff
+	loadBackgroundTexturesAndSprites();
+
+	// Sets player initial position
+	sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
+	mPlayer.setPosition(playerPosition);
+	mPlayer.setLives(3);
+
+	createCarEnemies(5);
+	createLogEnemies(5);
 }

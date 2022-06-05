@@ -1,8 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include "canNotLoadTexture.h"
 
 class Player
 {
 	private:
+	unsigned int lives = 3;
 	// Position of Player on the screen
 	sf::Vector2f mPosition;
 	sf::Vector2f mSize;
@@ -49,15 +51,17 @@ class Player
     void stopUp();
 	void stopDown();
 
+	unsigned int getLives() const;
 	unsigned int getHeight() const;
 	unsigned int getWidth() const;
 	sf::Vector2f getPosition() const;
 
+	void setLives(unsigned int newLives);
 	void setMoveWithLog(double speed=0);
 	double getMoveWithLogSpeed();
 	void movePositionWithLog(float elapsedTime);
 
 	// Function that is called once every frame to update display
 	void update(float elapsedTime);
-	void die(sf::Vector2f newPos);
+	bool die(sf::Vector2f newPos);
 };

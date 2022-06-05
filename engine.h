@@ -15,6 +15,9 @@ enum ScreenToDisplay
 class Engine
 {
 	private:
+	// A regular RenderWindow
+	sf::RenderWindow mWindow;
+
 	// Time handling variables
 	const sf::Time frameDelay_ms = sf::milliseconds(1);
 	sf::Time timeElapsedFromLastFrame_ms = sf::milliseconds(0);
@@ -25,8 +28,14 @@ class Engine
 	// Declare a sprite and a Texture for the background
 	sf::Sprite mGrassStartSprite;
 	sf::Texture mGrassStartTexture;
+	std::vector<sf::Sprite> mGrassMetaSprite;
+	std::vector<sf::FloatRect> mGrassMetaHitbox;
+	sf::Texture mGrassMetaTexture;
 	sf::Sprite mGrassMidSprite;
+	sf::Texture mGrassMetaTextureAchieved;
 	sf::Texture mGrassMidTexture;
+	sf::Sprite mGrassEndSprite;
+	sf::Texture mGrassEndTexture;
 	sf::Sprite mRoadSprite;
 	sf::Texture mRoadTexture;
 	sf::Sprite mWaterSprite;
@@ -39,6 +48,9 @@ class Engine
 	Enemies mEnemies;
 
 	Menu mMenu;
+
+	bool safetyZone[5] = {false, false, false, false, false};
+
 	// Private functions for internal use only
 	void input();
 	void update(float dtAsSeconds);
@@ -53,15 +65,14 @@ class Engine
 	// start will call all the private functions
 	void start();
 
-	void checkCollision();
+	bool checkCollision();
 	void checkPlayerBoundCollision();
-	void checkPlayerCarEnemyCollision();
-	void checkPlayerWaterCollision();
+	bool checkPlayerCarEnemyCollision();
+	bool checkPlayerWaterCollision();
 	void checkPlayerLogEnemyCollision();
+	void checkPlayerMetaCollision();
 	void loadBackgroundTexturesAndSprites();
+	void resetGame();
 
 	ScreenToDisplay screenToDisplay;
-
-	// A regular RenderWindow
-	sf::RenderWindow mWindow;
 };

@@ -12,10 +12,22 @@ Player::Player()
 	mUpPressed = false;
 
 	// Associate a texture with the sprite
-	mTextureBack.loadFromFile("textures/frog_back.png");
-	mTextureRight.loadFromFile("textures/frog_right.png");
-	mTextureLeft.loadFromFile("textures/frog_left.png");
-	mTextureFront.loadFromFile("textures/frog_front.png");
+	if(!mTextureBack.loadFromFile("textures/frog_back.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	if(!mTextureRight.loadFromFile("textures/frog_right.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	if(!mTextureLeft.loadFromFile("textures/frog_left.png"))
+	{
+		throw CanNotLoadTexture();
+	}
+	if(!mTextureFront.loadFromFile("textures/frog_front.png"))
+	{
+		throw CanNotLoadTexture();
+	}
 	mSprite.setTexture(mTextureBack);
 
 	mSize.x = mSprite.getTexture()->getSize().x * mSprite.getScale().x,
@@ -138,7 +150,24 @@ double Player::getMoveWithLogSpeed()
 	return moveWithLog;
 }
 
-void Player::die(sf::Vector2f newPos)
+bool Player::die(sf::Vector2f newPos)
 {
+	if(getLives() == 1)
+	{
+		setLives(0);
+		return false;
+	}
+	setLives(getLives() - 1);
 	setPosition(newPos);
+	return true;
+}
+
+unsigned int Player::getLives() const
+{
+	return lives;
+}
+
+void Player::setLives(unsigned int newLives)
+{
+	lives = newLives;
 }

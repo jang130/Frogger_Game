@@ -8,8 +8,6 @@ Engine::Engine()
 	// Create main game window
 	mWindow.create(sf::VideoMode(resolution.x, resolution.y), "Frogger Game");
 
-	resetGame();
-
 	Menu newMenu(resolution.x, resolution.y);
 	mMenu = newMenu;
 
@@ -457,7 +455,7 @@ void Engine::loadBackgroundTexturesAndSprites()
 		grassMeta.setTextureRect(sf::IntRect(0, 0, 50, 50));
 		grassMeta.setTexture(mGrassMetaTexture);
 		grassMeta.setPosition((resolution.x - 50) / 4 * i, 0);
-		mGrassMetaSprite.push_back(grassMeta);
+		mGrassMetaSprite[i]= grassMeta;
 
 		sf::Vector2f position(grassMeta.getPosition().x+25, grassMeta.getPosition().y);
 		sf::Vector2f size(1, 1);

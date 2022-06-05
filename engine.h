@@ -28,7 +28,7 @@ class Engine
 	// Declare a sprite and a Texture for the background
 	sf::Sprite mGrassStartSprite;
 	sf::Texture mGrassStartTexture;
-	std::vector<sf::Sprite> mGrassMetaSprite;
+	sf::Sprite mGrassMetaSprite[5];	//when using std::vector, segmentation fault occurs
 	std::vector<sf::FloatRect> mGrassMetaHitbox;
 	sf::Texture mGrassMetaTexture;
 	sf::Sprite mGrassMidSprite;

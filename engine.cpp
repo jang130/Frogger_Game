@@ -390,10 +390,12 @@ void Engine::checkPlayerMetaCollision()
 	unsigned int i = 0;
 	for(sf::FloatRect &metaHitbox: mGrassMetaHitbox)
 	{
-		if(metaHitbox.intersects(mPlayer.getSprite().getGlobalBounds()))
+		if(metaHitbox.intersects(mPlayer.getSprite().getGlobalBounds()) && !safetyZone[i])
 		{
 			safetyZone[i] = true;
 			mGrassMetaSprite[i].setTexture(mGrassMetaTextureAchieved);
+			sf::Vector2f playerPosition{(resolution.x - mPlayer.getWidth()) / 2, resolution.y - mPlayer.getHeight()};
+			mPlayer.setPosition(playerPosition);
 		}
 		i++;
 	}
@@ -450,14 +452,15 @@ void Engine::loadBackgroundTexturesAndSprites()
 	sf::Sprite grassMeta;
 	sf::FloatRect grassMetaHitbox;
 
+	mGrassMetaHitbox.clear();
 	for(int i = 0; i < 5; ++i)
 	{
 		grassMeta.setTextureRect(sf::IntRect(0, 0, 50, 50));
 		grassMeta.setTexture(mGrassMetaTexture);
 		grassMeta.setPosition((resolution.x - 50) / 4 * i, 0);
-		mGrassMetaSprite[i]= grassMeta;
+		mGrassMetaSprite[i] = grassMeta;
 
-		sf::Vector2f position(grassMeta.getPosition().x+25, grassMeta.getPosition().y);
+		sf::Vector2f position(grassMeta.getPosition().x + 25, grassMeta.getPosition().y);
 		sf::Vector2f size(1, 1);
 		sf::FloatRect hitbox(position, size);
 		grassMetaHitbox = hitbox;

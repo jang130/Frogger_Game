@@ -1,0 +1,24 @@
+Frogger game
+Project for PROI laboratories
+
+C++11
+G++ compiler
+
+Topic: Creation game like original retro Frogger
+
+Project description:
+Game allows user to control small frog in dengerous city, it has to jump through roads and river without dying. Player has got 3 lives in each game.
+Games ends when user places frog in every of five final top positions. Every run is descripted with final score basded on game time.
+
+Class naming: PascalCase
+
+Variables naming: camelCase, prefix 'm' for private class members
+
+Functions/methods naming: camelCase
+
+Code formatted by clang-format-12
+
+How to build and play?
+1. Clone whole repository
+2. run 'make' command from cloned directory(SFML libraries have to be installed on pc)
+3. run ./Frogger game executive file

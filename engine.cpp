@@ -68,7 +68,7 @@ void Engine::start()
 			}
 
 			draw();
-			if(safetyZone[0]) //&& safetyZone[1] && safetyZone[2] && safetyZone[3] && safetyZone[4])
+			if(safetyZone[0] && safetyZone[1] && safetyZone[2] && safetyZone[3] && safetyZone[4])
 			{
 				wonGame();
 			}

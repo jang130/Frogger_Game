@@ -1,10 +1,21 @@
+/**
+ * @file engine.h
+ *
+ * @brief class for main game engine
+ * @authors Kamil Kośnik, Adam Moszczyński
+ * @contact: kamilkosnik@gmail.com, adm.moszczynski@gmail.com
+ *
+ */
+
+#ifndef ENGINE_H
+#define ENGINE_H
+
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "player.h"
 #include "enemy.h"
 #include "menu.h"
-#include <memory>
-#include <iterator>
 
 enum ScreenToDisplay
 {
@@ -84,3 +95,5 @@ class Engine
 
 	ScreenToDisplay screenToDisplay;
 };
+
+#endif

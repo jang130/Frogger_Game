@@ -1,3 +1,15 @@
+/**
+ * @file menu.h
+ *
+ * @brief class for handling menu contrlling
+ * @authors Kamil Kośnik, Adam Moszczyński
+ * @contact: kamilkosnik@gmail.com, adm.moszczynski@gmail.com
+ *
+ */
+
+#ifndef MENU_H
+#define MENU_H
+
 #include "SFML/Graphics.hpp"
 #include <memory>
 
@@ -23,3 +35,5 @@ class Menu
 		return selectedItemIndex;
 	}
 };
+
+#endif

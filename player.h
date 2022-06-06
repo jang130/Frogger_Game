@@ -1,3 +1,15 @@
+/**
+ * @file player.h
+ *
+ * @brief class for player object
+ * @authors Kamil Kośnik, Adam Moszczyński
+ * @contact: kamilkosnik@gmail.com, adm.moszczynski@gmail.com
+ *
+ */
+
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <SFML/Graphics.hpp>
 #include "canNotLoadTexture.h"
 
@@ -65,3 +77,5 @@ class Player
 	void update(float elapsedTime);
 	bool die(sf::Vector2f newPos);
 };
+
+#endif

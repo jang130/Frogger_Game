@@ -14,8 +14,9 @@ Engine::Engine()
 	playerText.setScale(1, 1);
 	playerText.setFont(font);
 	playerText.setFillColor(sf::Color::Black);
-	playerText.setPosition(0, 0);
-	//resolution.x - playerText.getLocalBounds().width*playerText.getScale().x / 2, resolution.y - playerText.getLocalBounds().height*playerText.getScale().y / 2);
+	playerText.setPosition(50, 50);
+	// resolution.x - playerText.getLocalBounds().width*playerText.getScale().x / 2, resolution.y -
+	// playerText.getLocalBounds().height*playerText.getScale().y / 2);
 
 	screenToDisplay = menu;
 }
@@ -44,8 +45,18 @@ void Engine::start()
 				case sf::Event::KeyReleased:
 					input();
 				case sf::Event::TextEntered:
-					playerInput += event.text.unicode;
-					playerText.setString(playerInput);
+					if(screenToDisplay == scoreSave)
+					{
+						if(event.text.unicode < 128)
+						{
+							playerInput += event.text.unicode;
+							playerText.setString(playerInput);
+						}
+						else
+						{
+							// Time to consider sf::String or some other unicode-capable string
+						}
+					}
 					break;
 			}
 		}
@@ -72,12 +83,12 @@ void Engine::start()
 			}
 
 			draw();
-			if(safetyZone[0] && safetyZone[1] && safetyZone[2] && safetyZone[3] &&safetyZone[4])
+			if(safetyZone[0] && safetyZone[1] && safetyZone[2] && safetyZone[3] && safetyZone[4])
 			{
 				wonGame();
 			}
 		}
-		else if (screenToDisplay == scoreSave)
+		else if(screenToDisplay == scoreSave)
 		{
 			mWindow.clear(sf::Color::White);
 			mWindow.draw(playerText);
@@ -114,7 +125,8 @@ void Engine::input()
 					resetGame();
 					break;
 				case 1:
-					//
+					screenToDisplay = scoreSave;
+					//int finalScore = playingTime;
 					break;
 				case 2:
 					mWindow.close();

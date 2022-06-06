@@ -1,3 +1,15 @@
+/**
+ * @file enemy.h
+ *
+ * @brief classes for enemy two types of objects
+ * @authors Kamil Kośnik, Adam Moszczyński
+ * @contact: kamilkosnik@gmail.com, adm.moszczynski@gmail.com
+ *
+ */
+
+#ifndef ENEMY_H
+#define ENEMY_H
+
 #include <SFML/Graphics.hpp>
 #include <memory>
 
@@ -49,3 +61,5 @@ struct Enemies
 	std::vector<std::string> logTexturesForLines = {"textures/log1.png", "textures/log1.png", "textures/log1.png", "textures/log1.png", "textures/log1.png"};
 	std::vector<int> logSpeedsForLines = {50, -80, 100, -120, 150};
 };
+
+#endif

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <string>
 #include "engine.h"
 #include "canNotLoadTexture.h"
 
@@ -11,12 +12,9 @@ Engine::Engine()
 	Menu newMenu(resolution.x, resolution.y);
 	mMenu = newMenu;
 
-	playerText.setScale(1, 1);
-	playerText.setFont(font);
-	playerText.setFillColor(sf::Color::Black);
-	playerText.setPosition(50, 50);
-	// resolution.x - playerText.getLocalBounds().width*playerText.getScale().x / 2, resolution.y -
-	// playerText.getLocalBounds().height*playerText.getScale().y / 2);
+	playerScore.setScale(1, 1);
+	playerScore.setFont(font);
+	playerScore.setFillColor(sf::Color::Black);
 
 	screenToDisplay = menu;
 }
@@ -44,19 +42,6 @@ void Engine::start()
 					break;
 				case sf::Event::KeyReleased:
 					input();
-				case sf::Event::TextEntered:
-					if(screenToDisplay == scoreSave)
-					{
-						if(event.text.unicode < 128)
-						{
-							playerInput += event.text.unicode;
-							playerText.setString(playerInput);
-						}
-						else
-						{
-							// Time to consider sf::String or some other unicode-capable string
-						}
-					}
 					break;
 			}
 		}
@@ -83,7 +68,7 @@ void Engine::start()
 			}
 
 			draw();
-			if(safetyZone[0] && safetyZone[1] && safetyZone[2] && safetyZone[3] && safetyZone[4])
+			if(safetyZone[0]) //&& safetyZone[1] && safetyZone[2] && safetyZone[3] && safetyZone[4])
 			{
 				wonGame();
 			}
@@ -91,7 +76,18 @@ void Engine::start()
 		else if(screenToDisplay == scoreSave)
 		{
 			mWindow.clear(sf::Color::White);
-			mWindow.draw(playerText);
+			sf::Text desc;
+			char score_buf[10];
+			std::sprintf(score_buf, "%.3f", playingTimeFinal);
+			playerScore.setString(score_buf);
+			playerScore.setPosition((resolution.x-playerScore.getLocalBounds().width) / 2, resolution.y / 2);
+			desc.setScale(1, 1);
+			desc.setFont(font);
+			desc.setFillColor(sf::Color::Black);
+			desc.setString("Your Score:");
+			desc.setPosition((resolution.x-desc.getLocalBounds().width) / 2, (resolution.y-80) / 2);
+			mWindow.draw(playerScore);
+			mWindow.draw(desc);
 		}
 
 		// check time elapsed for frame displaying
@@ -126,12 +122,16 @@ void Engine::input()
 					break;
 				case 1:
 					screenToDisplay = scoreSave;
-					//int finalScore = playingTime;
+					// int finalScore = playingTime;
 					break;
 				case 2:
 					mWindow.close();
 					break;
 			}
+		}
+		else if(screenToDisplay == scoreSave)
+		{
+			screenToDisplay = menu;
 		}
 	}
 
@@ -606,9 +606,13 @@ void Engine::resetGame()
 	safetyZone[2] = false;
 	safetyZone[3] = false;
 	safetyZone[4] = false;
+
+	playingTimeFinal = 0;
+	playingTime = 0;
 }
 
 void Engine::wonGame()
 {
 	screenToDisplay = scoreSave;
+	playingTimeFinal = playingTime;
 }

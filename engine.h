@@ -55,8 +55,7 @@ class Engine
 	sf::FloatRect mWaterHitbox;
 	sf::Text playingTimeDisplay;
 	sf::Font font;
-	sf::String playerInput;
-	sf::Text playerText;
+	sf::Text playerScore;
 
 	// An instances of Player and other enemies
 	Player mPlayer;
@@ -68,6 +67,7 @@ class Engine
 	bool safetyZone[5] = {false, false, false, false, false};
 
 	float playingTime = 0;
+	float playingTimeFinal = 0;
 
 	// Private functions for internal use only
 	void input();

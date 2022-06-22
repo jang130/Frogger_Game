@@ -22,5 +22,3 @@ How to build and play?
 1. Clone whole repository
 2. run 'make' command from cloned directory(SFML libraries have to be installed on pc)
 3. run ./Frogger game executive file
-
-![Gameplay Screenshot](/imagesForReadme/Screenshot from 2022-06-22 15-45-36.png)
